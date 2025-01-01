@@ -1,0 +1,61 @@
+###
+// get all posts
+GET localhost:3000/posts
+
+###
+// create post
+POST localhost:3000/posts
+Content-Type: application/json
+
+{
+  "title": "Post 1",
+  "content": "Content 1",
+  "owner": "Owner"
+}
+###
+// get post by owner
+GET localhost:3000/posts?owner=Owner
+
+###
+// get post by id
+GET localhost:3000/posts/67759d86c45f7a066fb98689
+
+###
+// update a post by id
+PUT localhost:3000/posts/67759bafa471a833233380c6
+Content-Type: application/json
+
+{
+  "title": "Post 2",
+  "content": "Content 2",
+  "owner": "Owner"
+}
+
+
+###
+// get all comments
+GET localhost:3000/posts/67759d86c45f7a066fb98689/comments
+
+
+###
+// create a comment
+POST localhost:3000/posts/67759bafa471a833233380c6/comments
+Content-Type: application/json
+
+{
+  "content": "This is a not comment.",
+  "owner": "user1232323",
+  "post_id": "67759bafa471a833233380c6"
+}
+
+###
+// get all comments for a post
+GET localhost:3000/posts/67759bafa471a833233380c6/comments
+
+###
+// delete a comment
+DELETE localhost:3000/posts/67759d86c45f7a066fb98689/comments/67759d86c45f7a066fb98689
+
+###
+// delete all comments
+DELETE localhost:3000/posts/67759bafa471a833233380c6/comments
