@@ -1,34 +1,29 @@
 import {Request, Response} from 'express';
 import Comment from '../Models/comment_model';
+import mongoose from 'mongoose';
 
-const createComment = async(req: Request, res: Response) => {
-    const {content, owner, post_id} = req.body;
-    const comment = new Comment({
-        content,
-        owner,
-        post_id
-    });
+const createComment = async (req: Request, res: Response) => {
     try {
+        const comment = new Comment({
+            content: req.body.content,
+            owner: req.body.owner,
+            postId: req.body.postId.toString(),
+        });
         const savedComment = await comment.save();
-        res.json(savedComment);
+        res.status(200).send(savedComment);
     } catch (error) {
-        res.json({message: error});
+        res.status(401).send({message: error});
     }
-}
-const readComments = async(req: Request, res: Response) => {
-    const postId = req.params.post_id;
-    let comment
+};
+const readComments = async (req: Request, res: Response) => {
     try {
-        if(postId){
-            comment = await Comment.find({post_id: postId});
-        } else {
-            comment = await Comment.find({});
-        }
-        res.json(comment);
+      const filter = req.params.owner;
+      const comments = filter? await Comment.find({owner: filter}) : await Comment.find();
+        res.status(200).send(comments);
     } catch (error) {
-        res.json({message: error});
+        res.status(400).send({message: error});
     }
-}
+};
 const updateComment = async(req: Request, res: Response) => {
     try {
         const updatedComment = await Comment.findByIdAndUpdate
@@ -42,9 +37,9 @@ const updateComment = async(req: Request, res: Response) => {
     }
 }
 const deleteComments = async(req: Request, res: Response) => {
+    try {
     const filter = req.query.commentId;
     let deletedComment
-    try {
         if(filter){
             deletedComment = await Comment.findByIdAndDelete(filter);
         } else {

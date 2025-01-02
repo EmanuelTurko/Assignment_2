@@ -1,48 +1,37 @@
-"use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const app = (0, express_1.default)();
-const mongoose_1 = __importDefault(require("mongoose"));
-const dotenv_1 = require("dotenv");
-(0, dotenv_1.config)();
-const body_parser_1 = __importDefault(require("body-parser"));
-const post_routes_1 = __importDefault(require("./Routes/post_routes"));
-const comment_routes_1 = __importDefault(require("./Routes/comment_routes"));
-app.use(body_parser_1.default.json());
-app.use(body_parser_1.default.urlencoded({ extended: true }));
-app.use('/posts', post_routes_1.default);
-app.use('/posts', comment_routes_1.default);
-const appInit = () => __awaiter(void 0, void 0, void 0, function* () {
-    return new Promise((resolve, reject) => {
-        const db = mongoose_1.default.connection;
-        db.on("error", (err) => {
-            console.error(err);
-        });
-        db.once("open", () => {
-            console.log("connected to DB");
-        });
-        if (process.env.DB_CONNECT === undefined) {
-            console.error("Please set the DB_CONNECT environment variable");
-            reject();
-        }
-        else {
-            mongoose_1.default.connect(process.env.DB_CONNECT).then(() => {
-                console.log("appInit finish");
-            });
-            resolve(app);
-        }
-    });
+import express from 'express';
+import mongoose from 'mongoose';
+import { config as dotenvConfig } from 'dotenv';
+import bodyParser from 'body-parser';
+import postRoutes from './Routes/post_routes';
+import commentRoutes from './Routes/comment_routes';
+import authRoutes from './Routes/auth_routes';
+dotenvConfig();
+const app = express();
+// Middleware setup
+app.use(express.json());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+// Routes setup
+app.use('/posts', postRoutes);
+app.use('/posts', commentRoutes);
+app.use('/auth', authRoutes);
+// Root route setup to avoid 404 errors
+app.get('/', (req, res) => {
+    res.status(200).send('Server is running');
 });
-exports.default = appInit;
+// Database connection and app initialization
+const appInit = async () => {
+    try {
+        if (!process.env.DB_CONNECT) {
+            throw new Error('Please set the DB_CONNECT environment variable');
+        }
+        await mongoose.connect(process.env.DB_CONNECT);
+        console.log('Connected to DB');
+        return app;
+    }
+    catch (err) {
+        console.error(err);
+        throw err;
+    }
+};
+export default appInit;

@@ -2,14 +2,12 @@ import express from 'express';
 const commentRoutes = express.Router();
 import commentController from '../Controller/comment_controller';
 
-commentRoutes.get('/:postId/comments', commentController.readComments);
+commentRoutes.get('/', commentController.readComments);
 
-commentRoutes.post('/:postId/comments', commentController.createComment);
+commentRoutes.post('/', commentController.createComment);
 
-commentRoutes.put('/:postId/comments/:commentId', commentController.updateComment);
+commentRoutes.put('/:commentId', commentController.updateComment);
 
-commentRoutes.delete('/:postId/comments/:commentId', commentController.deleteComments);
-
-commentRoutes.delete('/:postId/comments', commentController.deleteComments);
+commentRoutes.delete('/:commentId', commentController.deleteComments);
 
 export default commentRoutes;

@@ -3,38 +3,37 @@ import Post from '../Models/post_model';
 
 
 const getAllPosts = async (req: Request, res: Response) => {
-    const filter = req.query.owner;
-    let posts
-    try {
-        if(filter){
-            posts = await Post.find({owner:filter});
-        } else {
-            posts = await Post.find();
-        }
-        res.json(posts);
+    try{
+        const filter = req.query.owner;
+        const posts = filter? await Post.find({owner: filter}) : await Post.find();
+        res.status(200).send(posts);
     } catch (error) {
-        res.json({message: error});
+        res.status(400).send({message: error});
     }
 }
 const createPost = async(req: Request, res: Response) => {
-    const post = new Post({
-        title: req.body.title,
-        content: req.body.content,
-        owner: req.body.owner,
-    });
     try {
+        const post = new Post({
+            title: req.body.title,
+            content: req.body.content,
+            owner: req.body.owner,
+    });
         const savedPost = await post.save();
-        res.json(savedPost);
+        res.status(200).send(savedPost);
     } catch (error) {
-        res.json({message: error});
+        res.status(401).send({message: error});
     }
 }
 const getPostById = async(req: Request, res: Response) => {
     try {
         const post = await Post.findById(req.params._id);
-        res.json(post);
+        if(!post){
+            res.status(404).send({message: "Post not found"});
+            return;
+        }
+        res.status(200).send(post);
     } catch (error) {
-        res.json({message: error});
+        res.status(402).send({message: error});
     }
 }
 const updatePost = async(req: Request, res: Response) => {
@@ -44,9 +43,13 @@ const updatePost = async(req: Request, res: Response) => {
             {$set: req.body},
             {new: true}
         );
-        res.json(updatedPost);
+        if(!updatedPost){
+            res.status(404).send({message: "Post not found"});
+            return;
+        }
+        res.status(200).send(updatedPost);
           } catch (error) {
-        res.json({message: error});
+        res.status(403).send({message: error});
     }
 }
 const postController = {

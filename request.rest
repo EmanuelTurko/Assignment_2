@@ -59,3 +59,14 @@ DELETE localhost:3000/posts/67759d86c45f7a066fb98689/comments/67759d86c45f7a066f
 ###
 // delete all comments
 DELETE localhost:3000/posts/67759bafa471a833233380c6/comments
+
+
+###
+POST localhost:3000/auth/register
+Content-Type: application/json
+
+{
+    "username": "user1232323",
+    "email": "xxxx@gmail.com",
+    "password": "password"
+}

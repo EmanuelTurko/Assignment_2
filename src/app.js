@@ -21,3 +21,9 @@ const Run = () => __awaiter(void 0, void 0, void 0, function* () {
     });
 });
 Run().then(() => console.log("Server started")).catch(err => console.error(err));
+//TODO Create users model,auth controller and routes ✅ - refresh left
+//TODO create jwt token for authentication ✅
+//TODO create auth-tests using jest - refresh tests and global coverage ✅
+//TODO create post-tests using jest ✅
+//TODO create comment-tests using jest
+//TODO document the api using swagger
