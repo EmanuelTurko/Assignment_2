@@ -6,11 +6,13 @@ dotenvConfig();
 import bodyParser from 'body-parser';
 import postRoutes from './Routes/post_routes';
 import commentRoutes from './Routes/comment_routes';
+import authRoutes from './Routes/auth_routes';
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/posts', postRoutes);
 app.use('/posts', commentRoutes);
+app.use('/auth', authRoutes);
 
 
 const appInit = async () => {

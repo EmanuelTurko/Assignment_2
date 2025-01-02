@@ -8,3 +8,8 @@ const Run = async () => {
     });
 };
 Run().then(() => console.log("Server started")).catch(err => console.error(err));
+
+//TODO Create users model,controller and routes
+//TODO create auth-tests using jest
+//TODO create jwt token for authentication
+//TODO document the api using swagger
