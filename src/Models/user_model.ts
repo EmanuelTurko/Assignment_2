@@ -13,8 +13,6 @@ const user = new mongoose.Schema({
         required: true,
         unique: true,
         min: 6,
-        max: 255,
-        match: [/@/, 'Invalid email']
     },
     password:{
         type: String,
